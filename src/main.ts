@@ -7,14 +7,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: '*', // Permite requisições de qualquer origem
+    origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: '*', // Permite todos os headers
+    allowedHeaders: '*',
   });
   // Configuração do Swagger
   const config = new DocumentBuilder()
-    .setTitle('Api de Tarefas')
-    .setDescription('Ai de Tarefas')
+    .setTitle('Api de Clientes')
+    .setDescription('Api de Cliente')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

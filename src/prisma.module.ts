@@ -3,6 +3,6 @@ import { PrismaService } from './prisma.service';
 
 @Module({
   providers: [PrismaService],
-  exports: [PrismaService], // Permite que outros módulos usem o PrismaService
+  exports: [PrismaService],
 })
 export class PrismaModule {}

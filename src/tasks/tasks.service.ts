@@ -18,8 +18,7 @@ export class TasksService {
   }
 
   async findAll(): Promise<Task[]> {
-    return this.prisma.task.findMany({
-    });
+    return this.prisma.task.findMany({});
   }
 
   async update(id: number, dto: UpdateTaskDto): Promise<Task> {

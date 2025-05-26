@@ -1,6 +1,6 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -14,7 +14,7 @@ export class AuthController {
   }
 
   @Post('login')
-  async login(@Body() dto: LoginDto): Promise<{ token: string }> {
+  async login(@Body() dto: LoginDto): Promise<{ object: object }> {
     return this.authService.login(dto);
   }
 }

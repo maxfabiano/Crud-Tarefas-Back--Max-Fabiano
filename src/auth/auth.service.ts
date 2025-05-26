@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcrypt';
-import { RegisterDto, LoginDto } from './dto/auth.dto';
+import { LoginDto, RegisterDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +24,7 @@ export class AuthService {
     return { message: 'Usuário registrado com sucesso' };
   }
 
-  async login(dto: LoginDto): Promise<{ token: string }> {
+  async login(dto: LoginDto): Promise<{ object: object }> {
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },
     });
@@ -36,6 +36,6 @@ export class AuthService {
     const payload = { sub: user.id, email: user.email };
     const token = this.jwtService.sign(payload);
 
-    return { token };
+    return { object: { sub: user.id, email: user.email, token } };
   }
 }

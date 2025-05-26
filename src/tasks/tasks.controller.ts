@@ -1,20 +1,19 @@
 import {
-  Controller,
-  Post,
-  Get,
-  Patch,
-  Delete,
   Body,
+  Controller,
+  Delete,
+  Get,
   Param,
   ParseIntPipe,
-  Request,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto, UpdateTaskDto } from './dto/task.dto';
-import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Task } from '@prisma/client';
 import { AuthGuard } from '@nestjs/passport';
-import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Task')
 @Controller('Task')
