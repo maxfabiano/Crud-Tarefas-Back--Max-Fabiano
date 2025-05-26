@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `clientes` MODIFY `CEP` VARCHAR(191) NOT NULL;
