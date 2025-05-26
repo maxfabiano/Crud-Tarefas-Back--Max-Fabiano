@@ -1,2 +1,8 @@
-//Max Fabiano Carlis Nunes Da SIlva
-Banco de dados esta na docker compose
+Para executar use os comandos projeto feito em nodeks com framework nestjs
+config do banco
+.env
+
+
+1 - npm install
+2 - npx prisma migrate dev --name init_mysql
+3 - npm start
