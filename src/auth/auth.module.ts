@@ -5,18 +5,18 @@ import { AuthController } from './auth.controller';
 import { PrismaService } from '../prisma.service';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { JwtStrategy } from './jwt.strategy'; // Importe para garantir que é um provider
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
     PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'default_secret_for_dev_auth', // <<< Verifique este secret
+      secret: process.env.JWT_SECRET || 'default_secret_for_dev_auth',
       signOptions: { expiresIn: '1h' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, JwtStrategy], // JwtStrategy PRECISA estar aqui
-  exports: [JwtModule], // Exporte JwtModule para que outros módulos possam usá-lo
+  providers: [AuthService, PrismaService, JwtStrategy],
+  exports: [JwtModule],
 })
 export class AuthModule {}

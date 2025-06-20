@@ -1,4 +1,3 @@
-// src/auth/jwt.strategy.ts
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Role } from '@prisma/client';
@@ -11,7 +10,6 @@ export interface JwtPayload {
   role: Role;
 }
 
-// NOVA INTERFACE EXPORTADA PARA REPRESENTAR O USUÁRIO ANEXADO A req.user
 export interface AuthenticatedUser {
   id: number;
   email: string;
@@ -31,7 +29,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: JwtPayload): Promise<AuthenticatedUser> {
-    // << Adicione o tipo de retorno aqui
     const user = await this.prisma.user.findUnique({
       where: { id: payload.sub },
     });

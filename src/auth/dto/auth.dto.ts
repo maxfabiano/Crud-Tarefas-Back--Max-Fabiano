@@ -1,8 +1,6 @@
-// src/auth/dto/auth.dto.ts
 
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEmail, IsString, MinLength } from 'class-validator';
-// It's best to import Role directly from Prisma in the backend DTOs
 import { Role } from '@prisma/client';
 
 export class RegisterDto {

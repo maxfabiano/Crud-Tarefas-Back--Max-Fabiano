@@ -1,41 +1,34 @@
-// src/main.ts (Backend NestJS)
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
 import * as dotenv from 'dotenv';
-import { PrismaService } from './prisma.service'; // Importe o PrismaService
-import { Role } from '@prisma/client'; // Importe o Role do Prisma
-import * as bcrypt from 'bcrypt'; // Para criptografar a senha do ADMIN padrão
+import { PrismaService } from './prisma.service';
+import { Role } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Inicializa o PrismaService
   const prismaService = app.get(PrismaService);
 
-  // --- LÓGICA PARA GARANTIR UM ADMIN INICIAL ---
   await initializeAdmin(prismaService);
-  // --- FIM DA LÓGICA DE ADMIN INICIAL ---
 
 
-  // Configuração do ValidationPipe
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true,
     transform: true,
   }));
 
-  // Configuração CORS
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
   });
 
-  // Configuração do Swagger
   const config = new DocumentBuilder()
     .setTitle('API Conéctar - Gerenciamento de Usuários')
     .setDescription('Documentação da API para o sistema de gerenciamento de usuários da Conéctar.')
@@ -51,7 +44,6 @@ async function bootstrap() {
   await app.listen(process.env.PORT || 3005);
 }
 
-// Função para inicializar o primeiro ADMIN
 async function initializeAdmin(prisma: PrismaService) {
   try {
     const adminExists = await prisma.user.findFirst({

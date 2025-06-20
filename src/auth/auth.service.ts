@@ -1,15 +1,14 @@
-// src/auth/auth.service.ts
 
 import {
   UnauthorizedException,
   Injectable,
   ConflictException,
-} from '@nestjs/common'; // Removido ForbiddenException
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma.service';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto, LoginDto, LoginResponseDto } from './dto/auth.dto';
-import { Role } from '@prisma/client'; // Importe Role
+import { Role } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
@@ -32,13 +31,12 @@ export class AuthService {
     }
     const hashedPassword = await bcrypt.hash(dto.password, 10);
 
-    // REGRA DE NEGÓCIO: Usuários cadastrados pela tela inicial SÃO SEMPRE ADMIN
     await this.prisma.user.create({
       data: {
         name: dto.name,
         email: dto.email,
         password: hashedPassword,
-        role: Role.ADMIN, // <<< FIX: A role é FORÇADA para ADMIN aqui
+        role: Role.ADMIN,
       },
     });
 
