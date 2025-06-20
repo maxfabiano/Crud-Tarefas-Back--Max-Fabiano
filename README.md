@@ -5,7 +5,7 @@ config do banco
 
 1 - npm install
 2 - npx prisma migrate dev --name init_mysql
-3 - npm start
+3 - npm run start
 
 
 

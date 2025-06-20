@@ -1,54 +1,50 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Configuração do banco de dados (datasource)
+// Mude 'postgresql' para o seu provider (ex: 'mysql', 'sqlite', 'sqlserver', 'mongodb')
+// Certifique-se de que a variável de ambiente DATABASE_URL esteja definida no seu arquivo .env
 datasource db {
-  provider = "mysql"
+  provider = "mysql" // Altere para "mysql" se estiver usando MySQL, etc.
   url      = env("DATABASE_URL")
 }
 
+// Gerador do Prisma Client
+// Este gerador é responsável por criar o código que você usa para interagir com o banco de dados
 generator client {
   provider = "prisma-client-js"
 }
 
-model Task {
-  id          Int     @id @default(autoincrement())
-  title       String
-  body        String
-  isCompleted Boolean @default(false)
-  userId      Int
-  user        User    @relation(fields: [userId], references: [id])
-
-  @@map("tasks")
-}
-
+// Definição do modelo User
+// Representa a tabela de usuários no seu banco de dados
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  password String
-  tasks    Task[]
-  clientes Cliente[]
+  id          Int      @id @default(autoincrement()) // ID único para cada usuário, auto-incrementado
+  name        String                                 // Nome completo do usuário
+  email       String   @unique                       // Email único do usuário (não pode haver dois iguais)
+  password    String                                 // Senha do usuário (hash)
+  role        Role     @default(USER)                // Papel do usuário (USER ou ADMIN), padrão é USER
+  createdAt   DateTime @default(now())               // Data e hora de criação do registro
+  updatedAt   DateTime @updatedAt                    // Data e hora da última atualização do registro
+  lastLoginAt DateTime?                              // Data e hora do último login do usuário (pode ser nulo)
 
-  @@map("users")
+  // Campo para vincular um usuário regular a um administrador (gerente)
+  // `managerId` é o ID do administrador que gerencia este usuário. É opcional (`Int?`)
+  // porque nem todo usuário (especialmente ADMINs) terá um gerente.
+  managerId   Int?
+
+  // Relação self-referencing (um usuário pode ser gerente de outros usuários)
+  // `manager`: O usuário que é o gerente deste usuário. Relaciona-se com 'ManagedUsers'.
+  // `managedUsers`: Lista de usuários que este usuário gerencia. Relaciona-se com 'ManagedUsers'.
+  // Esta configuração é crucial para a regra de negócio de admins gerenciando usuários.
+  manager   User?    @relation("ManagedUsers", fields: [managerId], references: [id], onDelete: SetNull)
+  managedUsers User[] @relation("ManagedUsers")
+
+  @@map("users") // Mapeia este modelo para uma tabela chamada 'users' no banco de dados
 }
 
-// Novo modelo Cliente
-model Cliente {
-  id               Int      @id @default(autoincrement())
-  idUsuario        Int
-  DataHoraCadastro DateTime @default(now()) @map("DataHoraCadastro")
-  Codigo           String   @db.VarChar(15)
-  Nome             String   @db.VarChar(150)
-  CPF_CNPJ         String   @db.VarChar(20)
-  CEP              String
-  Logradouro       String   @db.VarChar(100)
-  Endereco         String   @db.VarChar(120)
-  Numero           String   @db.VarChar(20)
-  Bairro           String   @db.VarChar(50)
-  Cidade           String   @db.VarChar(60)
-  UF               String   @db.VarChar(2)
-  Complemento      String?  @db.VarChar(150)
-  Fone             String?  @db.VarChar(15)
-  LimiteCredito    Float    @map("LimiteCredito")
-  Validade         DateTime @map("Validade") @db.Date
-
-  usuario User @relation(fields: [idUsuario], references: [id])
-
-  @@map("clientes")
+// Definição do Enum Role
+// Usado para tipar o campo 'role' no modelo User
+enum Role {
+  USER  // Usuário regular
+  ADMIN // Usuário administrador
 }

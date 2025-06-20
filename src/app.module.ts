@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
-import { TasksModule } from './tasks/tasks.module';
-import { ClientesModule } from './clientes/clientes.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -10,8 +9,7 @@ import { ClientesModule } from './clientes/clientes.module';
       isGlobal: true,
     }),
     AuthModule,
-    TasksModule,
-    ClientesModule,
+    UsersModule,
   ],
 })
 export class AppModule {}

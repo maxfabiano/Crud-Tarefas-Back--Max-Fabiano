@@ -1,22 +1,22 @@
+// src/auth/auth.module.ts
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { JwtModule } from '@nestjs/jwt';
+import { PrismaService } from '../prisma.service';
 import { PassportModule } from '@nestjs/passport';
-import { JwtStrategy } from './jwt.strategy';
-import { PrismaModule } from '../prisma.module';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtStrategy } from './jwt.strategy'; // Importe para garantir que é um provider
 
 @Module({
   imports: [
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     JwtModule.register({
-      secret: process.env.JWT_SECRET || 'default_secret',
+      secret: process.env.JWT_SECRET || 'default_secret_for_dev_auth', // <<< Verifique este secret
       signOptions: { expiresIn: '1h' },
     }),
-    PrismaModule,
   ],
-  providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService],
+  providers: [AuthService, PrismaService, JwtStrategy], // JwtStrategy PRECISA estar aqui
+  exports: [JwtModule], // Exporte JwtModule para que outros módulos possam usá-lo
 })
 export class AuthModule {}
